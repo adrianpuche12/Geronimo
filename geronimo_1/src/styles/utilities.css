@@ -4,47 +4,50 @@
 
 /* Botones de exportación en mensajes */
 .message-actions {
-  margin-top: 10px;
+  margin-top: var(--md-spacing-1);
   display: flex;
-  gap: 10px;
+  gap: var(--md-spacing-1);
   align-items: center;
   position: relative;
 }
 
 .btn-export-response {
-  background: #2c3e50;
-  color: #e0e0e0;
-  border: 1px solid #4a9eff;
-  padding: 6px 12px;
-  border-radius: 4px;
+  background: var(--md-surface-4dp);
+  color: var(--md-text-high);
+  border: 1px solid var(--md-primary);
+  padding: var(--md-spacing-1) var(--md-spacing-2);
+  border-radius: var(--md-radius-small);
   cursor: pointer;
-  font-size: 0.85em;
-  transition: all 0.2s;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.25px;
+  transition: var(--md-transition-standard);
   font-family: inherit;
+  box-shadow: var(--md-elevation-1);
 }
 
 .btn-export-response:hover {
-  background: #4a9eff;
+  background: var(--md-primary);
   color: white;
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
+  box-shadow: var(--md-elevation-2);
 }
 
 .btn-export-response:active {
-  transform: translateY(0);
+  box-shadow: var(--md-elevation-4);
 }
 
 /* Menú de exportación */
 .export-menu {
   position: absolute;
-  top: 40px;
+  top: 48px;
   left: 0;
-  background: #2c3e50;
-  border: 1px solid #4a9eff;
-  border-radius: 8px;
-  padding: 15px;
+  background: var(--md-surface-8dp);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--md-radius-medium);
+  padding: var(--md-spacing-2);
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  box-shadow: var(--md-elevation-8);
   min-width: 200px;
 }
 
@@ -52,64 +55,65 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #444;
-  color: #e0e0e0;
-  font-size: 0.9em;
+  margin-bottom: var(--md-spacing-1);
+  padding-bottom: var(--md-spacing-1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--md-text-high);
+  font-size: 0.875rem;
   font-weight: 500;
 }
 
 .export-menu-header .close-btn {
   background: none;
   border: none;
-  color: #e0e0e0;
-  font-size: 1.5em;
+  color: var(--md-text-medium);
+  font-size: 1.5rem;
   cursor: pointer;
   padding: 0;
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
-  transition: all 0.2s;
+  border-radius: var(--md-radius-small);
+  transition: var(--md-transition-fast);
 }
 
 .export-menu-header .close-btn:hover {
-  background: #444;
-  color: #4a9eff;
+  background: var(--md-surface-12dp);
+  color: var(--md-primary);
 }
 
 .export-options {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--md-spacing-1);
 }
 
 .export-options button {
-  background: #34495e;
-  color: #e0e0e0;
+  background: var(--md-surface-6dp);
+  color: var(--md-text-high);
   border: none;
-  padding: 10px 15px;
-  border-radius: 4px;
+  padding: var(--md-spacing-1) var(--md-spacing-2);
+  border-radius: var(--md-radius-small);
   cursor: pointer;
   text-align: left;
-  transition: all 0.2s;
-  font-size: 0.9em;
+  transition: var(--md-transition-standard);
+  font-size: 0.875rem;
+  font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--md-spacing-1);
 }
 
 .export-options button:hover {
-  background: #4a9eff;
+  background: var(--md-primary);
   color: white;
-  transform: translateX(4px);
+  box-shadow: var(--md-elevation-2);
 }
 
 .export-options button:active {
-  transform: translateX(2px);
+  box-shadow: var(--md-elevation-4);
 }
 
 /* Responsive adjustments for export menu */
@@ -134,20 +138,21 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--text-muted);
-  padding: 3rem;
+  color: var(--md-text-disabled);
+  padding: var(--md-spacing-6);
   text-align: center;
 }
 
 .empty-state-icon {
   font-size: 4rem;
-  margin-bottom: 1rem;
-  opacity: 0.5;
+  margin-bottom: var(--md-spacing-2);
+  opacity: 0.38;
 }
 
 .empty-state p {
-  font-size: 1.1rem;
-  margin: 0.5rem 0;
+  font-size: 1rem;
+  margin: var(--md-spacing-1) 0;
+  color: var(--md-text-medium);
 }
 
 /* ============================================
@@ -158,8 +163,8 @@
   display: inline-block;
   width: 1rem;
   height: 1rem;
-  border: 2px solid var(--bg-hover);
-  border-top-color: var(--accent-primary);
+  border: 2px solid var(--md-surface-12dp);
+  border-top-color: var(--md-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
