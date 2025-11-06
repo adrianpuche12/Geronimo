@@ -1,0 +1,199 @@
+/* ========== SIDEBAR (Dark Professional Style) ========== */
+
+.sidebar {
+  width: 300px;
+  background-color: #121418;
+  border-right: 1px solid #22252a;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Título principal */
+.sidebar h2 {
+  font-size: 1.2rem;
+  color: #ffffff;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #1f2228;
+  padding-bottom: 0.5rem;
+}
+
+/* Selector de proyectos */
+.project-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.project-selector select {
+  background-color: #181b21;
+  border: 1px solid #2b2e35;
+  color: #e5e7eb;
+  padding: 0.6rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.project-selector select:focus {
+  border-color: #4a9eff;
+}
+
+/* Botón para crear nuevo proyecto */
+.create-project-btn {
+  background: linear-gradient(135deg, #1f6feb, #1654b5);
+  border: none;
+  color: #ffffff;
+  font-weight: 500;
+  padding: 0.6rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.create-project-btn:hover {
+  background: linear-gradient(135deg, #2a7dfb, #1c5dc8);
+  transform: translateY(-1px);
+}
+
+.create-project-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Formulario para crear proyecto */
+.create-project-form {
+  background-color: #16191f;
+  border: 1px solid #2a2d34;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.create-project-form h3 {
+  margin-top: 0;
+  margin-bottom: 0.8rem;
+  color: #ffffff;
+  font-size: 1rem;
+  border-bottom: 1px solid #2b2e35;
+  padding-bottom: 0.4rem;
+}
+
+.create-project-form input,
+.create-project-form textarea {
+  width: 100%;
+  background-color: #1b1e24;
+  border: 1px solid #2f323a;
+  color: #e5e7eb;
+  padding: 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.7rem;
+  font-size: 0.9rem;
+  outline: none;
+  resize: none;
+  transition: border 0.2s ease;
+}
+
+.create-project-form input:focus,
+.create-project-form textarea:focus {
+  border-color: #4a9eff;
+}
+
+.create-project-form .submit-btn {
+  background-color: #4a9eff;
+  color: white;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 6px;
+  width: 100%;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.create-project-form .submit-btn:hover {
+  background-color: #5aafff;
+}
+
+.create-project-form .submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Sección de subida de archivos */
+.upload-section {
+  margin-top: auto;
+  border-top: 1px solid #1f2228;
+  padding-top: 1.2rem;
+}
+
+.upload-section h3 {
+  margin-bottom: 0.8rem;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+/* Área de arrastrar y soltar */
+.upload-area {
+  border: 2px dashed #2b2f36;
+  background-color: #1a1d23;
+  color: #b5b5b5;
+  border-radius: 8px;
+  text-align: center;
+  padding: 1.2rem;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.upload-area:hover {
+  border-color: #4a9eff;
+  background-color: #20242b;
+}
+
+.upload-area.dragging {
+  background-color: #1e2735;
+  border-color: #4a9eff;
+  box-shadow: 0 0 8px rgba(74, 158, 255, 0.3);
+}
+
+.upload-area input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Lista de archivos subidos */
+.file-list {
+  margin-top: 1rem;
+  background-color: #16191f;
+  border-radius: 6px;
+  border: 1px solid #2a2e35;
+  padding: 0.6rem;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.file-item {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  color: #d1d5db;
+  border-bottom: 1px solid #20242a;
+}
+
+.file-item:last-child {
+  border-bottom: none;
+}
+
+.file-item:hover {
+  background-color: #1e2128;
+}

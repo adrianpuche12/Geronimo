@@ -1,0 +1,126 @@
+/* ========== MODAL (Dark Professional Theme) ========== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 12, 16, 0.75);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.3s ease;
+}
+
+/* Caja principal del modal */
+.modal-container {
+  background-color: #1a1d23;
+  border: 1px solid #2a2d34;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+  animation: slideUp 0.3s ease;
+}
+
+/* Cabecera del modal */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #23262d;
+  background-color: #181b21;
+}
+
+.modal-title {
+  font-size: 1.1rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: #ffffff;
+}
+
+/* Cuerpo principal */
+.modal-body {
+  padding: 1.25rem;
+  flex: 1;
+  overflow-y: auto;
+  color: #e5e7eb;
+  line-height: 1.5;
+  font-size: 0.95rem;
+  scrollbar-width: thin;
+  scrollbar-color: #2b2f36 #1a1d23;
+}
+
+.modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+.modal-body::-webkit-scrollbar-thumb {
+  background-color: #2b2f36;
+  border-radius: 4px;
+}
+
+/* Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid #23262d;
+  background-color: #181b21;
+  gap: 0.6rem;
+}
+
+/* Botones */
+.modal-btn {
+  background-color: #1e61c9;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+}
+
+.modal-btn:hover {
+  background-color: #2673de;
+  transform: translateY(-1px);
+}
+
+.modal-btn.secondary {
+  background-color: transparent;
+  border: 1px solid #2a2d34;
+  color: #9ca3af;
+}
+
+.modal-btn.secondary:hover {
+  color: #ffffff;
+  border-color: #4a9eff;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

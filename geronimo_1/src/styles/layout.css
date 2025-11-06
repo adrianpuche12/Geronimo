@@ -1,0 +1,114 @@
+/* ========== LAYOUT BASE CON SCROLL FUNCIONAL ========== */
+
+/* Asegurar altura completa y fondo */
+html, body, #root, .App {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  background-color: #0f1115;
+  color: #e5e7eb;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  overflow: hidden; /* importante: manejamos el scroll interno */
+}
+
+/* Cabecera */
+.app-header {
+  background-color: #14161b;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #1f2127;
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 1.4rem;
+  color: #ffffff;
+  margin-bottom: 0.2rem;
+}
+
+.app-header p {
+  color: #9ca3af;
+  font-size: 0.9rem;
+}
+
+/* Contenedor principal */
+.main-container {
+  display: flex;
+  height: calc(100% - 80px); /* resta la altura del header */
+  overflow: hidden; /* evita doble scroll */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 270px;
+  flex-shrink: 0;
+  background-color: #13151b;
+  border-right: 1px solid #1f2127;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* Área de contenido (secciones) */
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #14161b;
+  overflow: hidden; /* cada sección hace su scroll */
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid #23262d;
+  background-color: #181b21;
+}
+
+.tab {
+  flex: 1;
+  background: none;
+  border: none;
+  padding: 0.75rem;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.tab.active {
+  color: #ffffff;
+  border-bottom: 2px solid #4a9eff;
+  background-color: #1c1f26;
+}
+
+.tab:hover {
+  color: #ffffff;
+  background-color: #1a1d24;
+}
+
+/* ====== FIX: Scroll interno en cada sección ====== */
+.chat-section,
+.explorer-section,
+.search-section {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #2b2f36 #14161b;
+}
+
+.chat-section::-webkit-scrollbar,
+.explorer-section::-webkit-scrollbar,
+.search-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-section::-webkit-scrollbar-thumb,
+.explorer-section::-webkit-scrollbar-thumb,
+.search-section::-webkit-scrollbar-thumb {
+  background-color: #2b2f36;
+  border-radius: 4px;
+}

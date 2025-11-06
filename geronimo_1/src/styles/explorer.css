@@ -1,0 +1,240 @@
+/* ========== EXPLORER SECTION (Dark Professional Style) ========== */
+
+.explorer-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.25rem;
+  background-color: #14161b;
+  overflow-y: auto;
+}
+
+/* Título principal */
+.explorer-section h2 {
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #23262d;
+  padding-bottom: 0.4rem;
+}
+
+/* Lista de proyectos */
+.projects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Cada proyecto */
+.project-item {
+  background-color: #1a1d23;
+  border: 1px solid #2a2d34;
+  border-radius: 8px;
+  padding: 0.9rem 1rem;
+  color: #e5e7eb;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.project-item:hover {
+  background-color: #20242b;
+  border-color: #4a9eff;
+  transform: translateY(-2px);
+}
+
+.project-item.active {
+  background: linear-gradient(135deg, #2b2f38, #1c1e24);
+  border: 1px solid #4a9eff;
+  color: #ffffff;
+}
+
+/* Título y descripción del proyecto */
+.project-item h3 {
+  font-size: 1rem;
+  margin: 0 0 0.4rem;
+  color: #ffffff;
+}
+
+.project-item p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+/* Lista de documentos */
+.documents-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* Cada documento */
+.document-item {
+  background-color: #181b21;
+  border: 1px solid #24272e;
+  border-radius: 6px;
+  padding: 0.7rem 0.9rem;
+  color: #d1d5db;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.document-item:hover {
+  background-color: #1f232b;
+  border-color: #4a9eff;
+  color: #ffffff;
+}
+
+.document-item.active {
+  background-color: #2b2f38;
+  border-color: #4a9eff;
+  color: #ffffff;
+}
+
+/* Estado vacío */
+.explorer-empty {
+  text-align: center;
+  color: #9ca3af;
+  padding: 3rem 1rem;
+  font-size: 0.95rem;
+}
+
+.explorer-empty-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  opacity: 0.7;
+}
+
+/* Barra superior de acciones (opcional) */
+.explorer-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.explorer-actions button {
+  background-color: #1e61c9;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.explorer-actions button:hover {
+  background-color: #2673de;
+  transform: translateY(-1px);
+}
+
+/* ========== DOCUMENT CARDS ========== */
+
+.document-item {
+  background-color: #1b1e24;
+  border: 1px solid #2a2d34;
+  border-radius: 10px;
+  padding: 0.9rem 1.2rem;
+  margin: 0.6rem 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.document-item:hover {
+  border-color: #4a9eff;
+  box-shadow: 0 0 10px rgba(74, 158, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.doc-main {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1;
+  overflow: hidden;
+}
+
+.doc-icon {
+  font-size: 1.4rem;
+  background: rgba(74, 158, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+}
+
+.doc-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.doc-path {
+  font-weight: 500;
+  color: #e5e7eb;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-meta {
+  font-size: 0.8rem;
+  color: #9ca3af;
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+/* Botones de acción */
+.doc-actions {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.doc-actions button {
+  background: none;
+  border: 1px solid #2a2d34;
+  color: #9ca3af;
+  border-radius: 8px;
+  padding: 0.4rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-size: 1rem;
+}
+
+.doc-actions button:hover {
+  border-color: #4a9eff;
+  color: #4a9eff;
+  transform: translateY(-1px);
+}
+
+.doc-actions .btn-delete:hover {
+  color: #ff4d4d;
+  border-color: #ff4d4d;
+}
+
+/* Tooltip para acciones */
+.doc-actions button[title] {
+  position: relative;
+}
+
+.doc-actions button[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -1.8rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #111319;
+  color: #e5e7eb;
+  font-size: 0.7rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0.9;
+  pointer-events: none;
+}

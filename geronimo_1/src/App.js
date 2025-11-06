@@ -1,9 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './App.css';
+import './styles/layout.css';
+import './styles/sidebar.css';
+import './styles/chat.css';
+import './styles/explorer.css';
+import './styles/search.css';
+import './styles/modal.css';
+import './styles/utilities.css';
+
 
 // URL del backend - ajusta según tu configuración
 const API_URL = 'http://62.171.160.238:3000/api';
+
 
 function App() {
   const [projects, setProjects] = useState([]);
@@ -32,7 +41,7 @@ function App() {
 
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
-
+const [isSearchBarCollapsed, setIsSearchBarCollapsed] = useState(false);
   // Cargar proyectos al iniciar
   useEffect(() => {
     loadProjects();
@@ -444,316 +453,334 @@ function App() {
 
           {/* Chat Section */}
           {activeTab === 'chat' && (
-          <section className="chat-section">
-            <div className="chat-messages">
-              {messages.length === 0 ? (
-                <div className="empty-state">
-                  <div className="empty-state-icon">💬</div>
-                  <p>Selecciona un proyecto y comienza a hacer preguntas</p>
-                  <p style={{fontSize: '0.85rem', marginTop: '0.5rem'}}>
-                    También puedes subir archivos desde el panel lateral
-                  </p>
-                </div>
-              ) : (
-                <>
-                  {messages.map((message, index) => (
-                    <div
-                      key={index}
-                      className={`message ${message.role}`}
-                    >
-                      <div className="message-header">
-                        {message.role === 'user' ? 'Tú' :
-                         message.role === 'assistant' ? 'Geronimo' : 'Sistema'}
+            <section className="chat-section">
+              <div className="chat-messages">
+                {messages.length === 0 ? (
+                  <div className="empty-state">
+                    <div className="empty-state-icon">💬</div>
+                    <p>Selecciona un proyecto y comienza a hacer preguntas</p>
+                    <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>
+                      También puedes subir archivos desde el panel lateral
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {messages.map((message, index) => (
+                      <div
+                        key={index}
+                        className={`message ${message.role}`}
+                      >
+                        <div className="message-header">
+                          {message.role === 'user' ? 'Tú' :
+                            message.role === 'assistant' ? 'Geronimo' : 'Sistema'}
+                        </div>
+                        <div className="message-content">
+                          {message.content}
+                        </div>
                       </div>
-                      <div className="message-content">
-                        {message.content}
+                    ))}
+                    {isLoading && (
+                      <div className="message assistant">
+                        <div className="message-header">Geronimo</div>
+                        <div className="message-content">
+                          <div className="loading"></div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                  {isLoading && (
-                    <div className="message assistant">
-                      <div className="message-header">Geronimo</div>
-                      <div className="message-content">
-                        <div className="loading"></div>
-                      </div>
-                    </div>
-                  )}
-                  <div ref={messagesEndRef} />
-                </>
-              )}
-            </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                  </>
+                )}
+              </div>
 
-            <div className="chat-input-area">
-              <textarea
-                value={inputMessage}
-                onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder={selectedProject ?
-                  "Escribe tu pregunta sobre el proyecto..." :
-                  "Selecciona un proyecto primero"
-                }
-                disabled={!selectedProject || isLoading}
-              />
-              <button
-                onClick={handleSendMessage}
-                disabled={!inputMessage.trim() || !selectedProject || isLoading}
-              >
-                {isLoading ? 'Enviando...' : 'Enviar'}
-              </button>
-            </div>
-          </section>
+              <div className="chat-input-area">
+                <textarea
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder={selectedProject ?
+                    "Escribe tu pregunta sobre el proyecto..." :
+                    "Selecciona un proyecto primero"
+                  }
+                  disabled={!selectedProject || isLoading}
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={!inputMessage.trim() || !selectedProject || isLoading}
+                >
+                  {isLoading ? 'Enviando...' : 'Enviar'}
+                </button>
+              </div>
+            </section>
           )}
 
           {/* Explorer Section */}
           {activeTab === 'explorer' && (
-          <section className="explorer-section">
-            <div className="explorer-header">
-              <h2>Explorador de Bases de Datos</h2>
-              <p>Visualiza y administra documentos de todos los proyectos</p>
-            </div>
+            <section className="explorer-section">
+              <div className="explorer-header">
+                <h2>
+                  - Explorador de Bases de Datos <span className="explorer-subtitle">
+                         - Visualiza y administra documentos de todos los proyectos
+                  </span>
+                </h2>
+              </div>
+              <div className="explorer-content">
+                {projects.length === 0 ? (
+                  <div className="empty-state">
+                    <div className="empty-state-icon">📂</div>
+                    <p>No hay proyectos todavía</p>
+                    <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>
+                      Crea un proyecto para empezar
+                    </p>
+                  </div>
+                ) : (
+                  <div className="projects-list">
+                    {projects.map(project => (
+                      <div key={project.id} className="project-item">
+                        <div
+                          className="project-header"
+                          onClick={() => toggleProjectExpand(project.id)}
+                        >
+                          <span className="expand-icon">
+                            {expandedProjects[project.id] ? '▼' : '▶'}
+                          </span>
+                          <span className="project-name">{project.name}</span>
+                          <span className="doc-count">
+                            {project.documents?.length || 0} docs
+                          </span>
+                        </div>
 
-            <div className="explorer-content">
-              {projects.length === 0 ? (
-                <div className="empty-state">
-                  <div className="empty-state-icon">📂</div>
-                  <p>No hay proyectos todavía</p>
-                  <p style={{fontSize: '0.85rem', marginTop: '0.5rem'}}>
-                    Crea un proyecto para empezar
-                  </p>
-                </div>
-              ) : (
-                <div className="projects-list">
-                  {projects.map(project => (
-                    <div key={project.id} className="project-item">
-                      <div
-                        className="project-header"
-                        onClick={() => toggleProjectExpand(project.id)}
-                      >
-                        <span className="expand-icon">
-                          {expandedProjects[project.id] ? '▼' : '▶'}
-                        </span>
-                        <span className="project-name">{project.name}</span>
-                        <span className="doc-count">
-                          {project.documents?.length || 0} docs
-                        </span>
-                      </div>
-
-                      {expandedProjects[project.id] && (
-                        <div className="documents-list">
-                          {project.documents?.length === 0 ? (
-                            <div className="no-documents">
-                              <span>📄</span> Sin documentos
-                            </div>
-                          ) : (
-                            project.documents.map(doc => (
-                              <div key={doc.id} className="document-item">
-                                <div className="doc-main">
-                                  <span className="doc-icon">📄</span>
-                                  <div className="doc-info">
-                                    <div className="doc-path">{doc.path}</div>
-                                    <div className="doc-meta">
-                                      <span>📅 {formatDate(doc.createdAt)}</span>
-                                      <span>💾 {formatFileSize(doc.content)}</span>
+                        {expandedProjects[project.id] && (
+                          <div className="documents-list">
+                            {project.documents?.length === 0 ? (
+                              <div className="no-documents">
+                                <span>📄</span> Sin documentos
+                              </div>
+                            ) : (
+                              project.documents.map(doc => (
+                                <div key={doc.id} className="document-item">
+                                  <div className="doc-main">
+                                    <span className="doc-icon">📄</span>
+                                    <div className="doc-info">
+                                      <div className="doc-path">{doc.path}</div>
+                                      <div className="doc-meta">
+                                        <span>📅 {formatDate(doc.createdAt)}</span>
+                                        <span>💾 {formatFileSize(doc.content)}</span>
+                                      </div>
                                     </div>
                                   </div>
+                                  <div className="doc-actions">
+                                    <button
+                                      className="btn-view"
+                                      onClick={() => handleViewDocument(doc)}
+                                      title="Ver contenido"
+                                    >
+                                      👁️
+                                    </button>
+                                    <button
+                                      className="btn-delete"
+                                      onClick={() => handleDeleteDocument(doc.id, doc.path)}
+                                      disabled={isLoading}
+                                      title="Eliminar documento"
+                                    >
+                                      🗑️
+                                    </button>
+                                  </div>
                                 </div>
-                                <div className="doc-actions">
-                                  <button
-                                    className="btn-view"
-                                    onClick={() => handleViewDocument(doc)}
-                                    title="Ver contenido"
-                                  >
-                                    👁️
-                                  </button>
-                                  <button
-                                    className="btn-delete"
-                                    onClick={() => handleDeleteDocument(doc.id, doc.path)}
-                                    disabled={isLoading}
-                                    title="Eliminar documento"
-                                  >
-                                    🗑️
-                                  </button>
-                                </div>
-                              </div>
-                            ))
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </section>
-          )}
-
-          {/* Search Section */}
-          {activeTab === 'search' && (
-          <section className="search-section">
-            <div className="search-hero">
-              <div className="search-hero-content">
-                <h1 className="search-hero-title">🔍 Busca en todo tu sistema</h1>
-                <p className="search-hero-subtitle">
-                  Encuentra archivos, documentos y contenido en todos tus proyectos
-                </p>
-
-                {/* Enhanced Search Bar */}
-                <div className="search-bar-enhanced">
-                  <div className="search-input-wrapper">
-                    <span className="search-icon">🔍</span>
-                    <input
-                      type="text"
-                      placeholder="Escribe para buscar en documentos, títulos, contenido..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                      disabled={isSearching}
-                      className="search-input-enhanced"
-                    />
-                    {searchQuery && (
-                      <button
-                        className="search-clear-btn"
-                        onClick={() => setSearchQuery('')}
-                        title="Limpiar búsqueda"
-                      >
-                        ✕
-                      </button>
-                    )}
-                  </div>
-                  <button
-                    onClick={handleSearch}
-                    disabled={isSearching || !searchQuery.trim()}
-                    className="search-btn-enhanced"
-                  >
-                    {isSearching ? (
-                      <>
-                        <span className="search-btn-spinner">⏳</span> Buscando...
-                      </>
-                    ) : (
-                      <>
-                        <span>🔍</span> Buscar
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                {/* Search stats */}
-                {searchResults.length > 0 && (
-                  <div className="search-stats">
-                    <span className="search-stats-count">
-                      {searchResults.length} resultado{searchResults.length > 1 ? 's' : ''} encontrado{searchResults.length > 1 ? 's' : ''}
-                    </span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="search-container">
-
-              {/* Filters */}
-              <div className="search-filters">
-                <select
-                  value={searchFilters.projectId}
-                  onChange={(e) => setSearchFilters({...searchFilters, projectId: e.target.value})}
-                >
-                  <option value="">Todos los proyectos</option>
-                  {projects.map(project => (
-                    <option key={project.id} value={project.id}>{project.name}</option>
-                  ))}
-                </select>
-
-                <input
-                  type="date"
-                  placeholder="Desde"
-                  value={searchFilters.dateFrom}
-                  onChange={(e) => setSearchFilters({...searchFilters, dateFrom: e.target.value})}
-                />
-
-                <input
-                  type="date"
-                  placeholder="Hasta"
-                  value={searchFilters.dateTo}
-                  onChange={(e) => setSearchFilters({...searchFilters, dateTo: e.target.value})}
-                />
-
-                <select
-                  value={searchFilters.fileType}
-                  onChange={(e) => setSearchFilters({...searchFilters, fileType: e.target.value})}
-                >
-                  <option value="">Todos los tipos</option>
-                  <option value="md">Markdown (.md)</option>
-                  <option value="txt">Texto (.txt)</option>
-                  <option value="json">JSON (.json)</option>
-                  <option value="js">JavaScript (.js)</option>
-                  <option value="ts">TypeScript (.ts)</option>
-                  <option value="py">Python (.py)</option>
-                </select>
-              </div>
-
-              {/* Results */}
-              <div className="search-results">
-                {searchResults.length === 0 && !isSearching && searchQuery && (
-                  <div className="empty-state">
-                    <div className="empty-state-icon">🔍</div>
-                    <p>No se encontraron resultados</p>
-                    <p style={{fontSize: '0.85rem', marginTop: '0.5rem'}}>
-                      Intenta con otros términos de búsqueda
-                    </p>
-                  </div>
-                )}
-
-                {searchResults.length === 0 && !isSearching && !searchQuery && (
-                  <div className="empty-state">
-                    <div className="empty-state-icon">🔍</div>
-                    <p>Escribe algo para buscar</p>
-                    <p style={{fontSize: '0.85rem', marginTop: '0.5rem'}}>
-                      Busca en paths, títulos o contenido de documentos
-                    </p>
-                  </div>
-                )}
-
-                {searchResults.length > 0 && (
-                  <div className="results-list">
-                    {searchResults.map(result => (
-                      <div key={result.id} className="result-item">
-                        <div className="result-header">
-                          <span className="result-icon">📄</span>
-                          <div className="result-info">
-                            <div className="result-path">
-                              {highlightText(result.path, searchQuery)}
-                            </div>
-                            <div className="result-meta">
-                              <span className="result-project">📁 {result.projectName}</span>
-                              <span className="result-date">📅 {formatDate(result.createdAt)}</span>
-                              <span className="result-match">
-                                {result.matchType === 'path' && '🎯 Match en ruta'}
-                                {result.matchType === 'title' && '🎯 Match en título'}
-                                {result.matchType === 'content' && '🎯 Match en contenido'}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        {result.snippet && (
-                          <div className="result-snippet">
-                            {highlightText(result.snippet, searchQuery)}
+                              ))
+                            )}
                           </div>
                         )}
-                        <div className="result-actions">
-                          <button
-                            className="btn-view"
-                            onClick={() => handleViewDocument(result)}
-                          >
-                            👁️ Ver
-                          </button>
-                        </div>
                       </div>
                     ))}
                   </div>
                 )}
               </div>
-            </div>
-          </section>
+            </section>
           )}
+
+          {/* Search Section */}
+{activeTab === 'search' && (
+  <section className="search-section">
+    <div className="search-hero">
+      <div className="search-hero-content">
+        <div className="search-header-row">
+          <h1 className="search-hero-title">🔍 Busca en todo tu sistema</h1>
+          <button
+            className="collapse-btn"
+            onClick={() => setIsSearchBarCollapsed(!isSearchBarCollapsed)}
+            title={isSearchBarCollapsed ? "Mostrar barra de búsqueda" : "Ocultar barra de búsqueda"}
+          >
+            {isSearchBarCollapsed ? '⬇️' : '⬆️'}
+          </button>
+        </div>
+
+        {!isSearchBarCollapsed && (
+          <>
+            <p className="search-hero-subtitle">
+              Encuentra archivos, documentos y contenido en todos tus proyectos
+            </p>
+
+            {/* Enhanced Search Bar */}
+            <div className="search-bar-enhanced">
+              <div className="search-input-wrapper">
+                <span className="search-icon">🔍</span>
+                <input
+                  type="text"
+                  placeholder="Escribe para buscar en documentos, títulos, contenido..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                  disabled={isSearching}
+                  className="search-input-enhanced"
+                />
+                {searchQuery && (
+                  <button
+                    className="search-clear-btn"
+                    onClick={() => setSearchQuery('')}
+                    title="Limpiar búsqueda"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+              <button
+                onClick={handleSearch}
+                disabled={isSearching || !searchQuery.trim()}
+                className="search-btn-enhanced"
+              >
+                {isSearching ? (
+                  <>
+                    <span className="search-btn-spinner">⏳</span> Buscando...
+                  </>
+                ) : (
+                  <>
+                    <span>🔍</span> Buscar
+                  </>
+                )}
+              </button>
+            </div>
+
+            {/* Search stats */}
+            {searchResults.length > 0 && (
+              <div className="search-stats">
+                <span className="search-stats-count">
+                  {searchResults.length} resultado{searchResults.length > 1 ? 's' : ''} encontrado{searchResults.length > 1 ? 's' : ''}
+                </span>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+
+    <div className="search-container">
+      {/* Filters */}
+      <div className="search-filters">
+        <select
+          value={searchFilters.projectId}
+          onChange={(e) => setSearchFilters({ ...searchFilters, projectId: e.target.value })}
+        >
+          <option value="">Todos los proyectos</option>
+          {projects.map(project => (
+            <option key={project.id} value={project.id}>{project.name}</option>
+          ))}
+        </select>
+
+        <input
+          type="date"
+          placeholder="Desde"
+          value={searchFilters.dateFrom}
+          onChange={(e) => setSearchFilters({ ...searchFilters, dateFrom: e.target.value })}
+        />
+
+        <input
+          type="date"
+          placeholder="Hasta"
+          value={searchFilters.dateTo}
+          onChange={(e) => setSearchFilters({ ...searchFilters, dateTo: e.target.value })}
+        />
+
+        <select
+          value={searchFilters.fileType}
+          onChange={(e) => setSearchFilters({ ...searchFilters, fileType: e.target.value })}
+        >
+          <option value="">Todos los tipos</option>
+          <option value="md">Markdown (.md)</option>
+          <option value="txt">Texto (.txt)</option>
+          <option value="json">JSON (.json)</option>
+          <option value="js">JavaScript (.js)</option>
+          <option value="ts">TypeScript (.ts)</option>
+          <option value="py">Python (.py)</option>
+        </select>
+      </div>
+
+      {/* Results */}
+      <div className="search-results">
+        {searchResults.length === 0 && !isSearching && searchQuery && (
+          <div className="empty-state">
+            <div className="empty-state-icon">🔍</div>
+            <p>No se encontraron resultados</p>
+            <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>
+              Intenta con otros términos de búsqueda
+            </p>
+          </div>
+        )}
+
+        {searchResults.length === 0 && !isSearching && !searchQuery && (
+          <div className="empty-state">
+            <div className="empty-state-icon">🔍</div>
+            <p>Escribe algo para buscar</p>
+            <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>
+              Busca en paths, títulos o contenido de documentos
+            </p>
+          </div>
+        )}
+
+        {searchResults.length > 0 && (
+          <div className="results-list">
+            {searchResults.map(result => (
+              <div key={result.id} className="result-item">
+                <div className="result-header">
+                  <span className="result-icon">📄</span>
+                  <div className="result-info">
+                    <div className="result-path">
+                      {highlightText(result.path, searchQuery)}
+                    </div>
+                    <div className="result-meta">
+                      <span className="result-project">📁 {result.projectName}</span>
+                      <span className="result-date">📅 {formatDate(result.createdAt)}</span>
+                      <span className="result-match">
+                        {result.matchType === 'path' && '🎯 Match en ruta'}
+                        {result.matchType === 'title' && '🎯 Match en título'}
+                        {result.matchType === 'content' && '🎯 Match en contenido'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {result.snippet && (
+                  <div className="result-snippet">
+                    {highlightText(result.snippet, searchQuery)}
+                  </div>
+                )}
+                <div className="result-actions">
+                  <button
+                    className="btn-view"
+                    onClick={() => handleViewDocument(result)}
+                  >
+                    👁️ Ver
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+)}
+
+
+
         </main>
 
         {/* Document Preview Modal - Global (works from any tab) */}
