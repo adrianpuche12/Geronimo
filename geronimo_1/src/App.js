@@ -29,6 +29,8 @@ function App() {
   });
   const [searchResults, setSearchResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(null); // Para menú de exportación
+  const [duplicateAlert, setDuplicateAlert] = useState(null); // Para modal de duplicados
 
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -100,11 +102,17 @@ function App() {
   const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
     handleFiles(files);
+    // Reset input para permitir subir el mismo archivo de nuevo
+    e.target.value = '';
   };
 
   const handleFiles = async (files) => {
     if (!selectedProject) {
       addSystemMessage('Por favor selecciona un proyecto primero.');
+      return;
+    }
+
+    if (files.length === 0) {
       return;
     }
 
@@ -121,16 +129,38 @@ function App() {
           content: content
         });
 
-        setUploadedFiles(prev => [...prev, {
-          name: file.name,
-          size: file.size,
-          uploadedAt: new Date().toISOString()
-        }]);
-
-        addSystemMessage(`✓ Archivo "${file.name}" subido correctamente.`);
+        // Verificar si el backend detectó un duplicado
+        if (response.data.statusCode === 409) {
+          addSystemMessage(`⚠️ "${file.name}" es un duplicado - ${response.data.message}`);
+        } else {
+          setUploadedFiles(prev => [...prev, {
+            name: file.name,
+            size: file.size,
+            uploadedAt: new Date().toISOString()
+          }]);
+          addSystemMessage(`✓ Archivo "${file.name}" subido correctamente.`);
+        }
       } catch (error) {
         console.error('Error uploading file:', error);
-        addSystemMessage(`✗ Error al subir "${file.name}": ${error.message}`);
+
+        // Manejar error de duplicado
+        if (error.response?.status === 409) {
+          const details = error.response.data.details || {};
+          const existingDoc = details.existingDocument || {};
+
+          // Mostrar modal de alerta de duplicado
+          setDuplicateAlert({
+            fileName: file.name,
+            duplicateType: details.duplicateType,
+            existingPath: existingDoc.path || 'archivo similar',
+            existingTitle: existingDoc.title,
+            message: error.response.data.message
+          });
+
+          addSystemMessage(`⚠️ "${file.name}" es un duplicado. Ya existe: ${existingDoc.path || 'archivo similar'}`);
+        } else {
+          addSystemMessage(`✗ Error al subir "${file.name}": ${error.response?.data?.message || error.message}`);
+        }
       }
     }
 
@@ -321,6 +351,124 @@ function App() {
     );
   };
 
+  // Función para exportar un documento individual
+  const exportDocument = async (documentId, format = 'txt') => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/docs/${documentId}/export?format=${format}`,
+        { responseType: 'blob' }
+      );
+
+      // Crear un enlace de descarga
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `document.${format}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      addSystemMessage(`✓ Documento exportado como ${format.toUpperCase()}`);
+    } catch (error) {
+      console.error('Error exporting document:', error);
+      addSystemMessage(`✗ Error al exportar documento: ${error.message}`);
+    }
+  };
+
+  // Función para exportar una respuesta de IA
+  const exportAIResponse = async (message, format = 'txt') => {
+    try {
+      // Buscar el mensaje de pregunta anterior
+      const messageIndex = messages.findIndex(m => m === message);
+      const questionMessage = messageIndex > 0 ? messages[messageIndex - 1] : null;
+
+      const question = questionMessage?.role === 'user' ? questionMessage.content : 'Sin pregunta';
+      const answer = message.content;
+      const sources = message.sources || [];
+
+      const response = await axios.post(
+        `${API_URL}/query/export`,
+        {
+          question,
+          answer,
+          sources,
+          format,
+          title: 'Geronimo AI Response',
+          metadata: {
+            projectId: selectedProject,
+            exportedAt: new Date().toISOString()
+          }
+        },
+        { responseType: 'blob' }
+      );
+
+      // Crear un enlace de descarga
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `geronimo_response_${Date.now()}.${format}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      addSystemMessage(`✓ Respuesta exportada como ${format.toUpperCase()}`);
+    } catch (error) {
+      console.error('Error exporting AI response:', error);
+      addSystemMessage(`✗ Error al exportar respuesta: ${error.message}`);
+    }
+  };
+
+  // Componente para el modal de duplicados
+  const DuplicateAlertModal = ({ alert, onClose }) => {
+    if (!alert) return null;
+
+    return (
+      <div className="duplicate-modal-overlay" onClick={onClose}>
+        <div className="duplicate-modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="duplicate-modal-header">
+            <div className="duplicate-icon">⚠️</div>
+          </div>
+
+          <div className="duplicate-modal-body">
+            <p className="duplicate-main-message">
+              El archivo <strong>"{alert.fileName}"</strong> ya existe en el proyecto.
+            </p>
+          </div>
+
+          <div className="duplicate-modal-footer">
+            <button className="btn-modal-close" onClick={onClose}>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Componente para el menú de exportación
+  const ExportMenu = ({ message, onClose }) => (
+    <div className="export-menu">
+      <div className="export-menu-header">
+        <span>Exportar como:</span>
+        <button onClick={onClose} className="close-btn">×</button>
+      </div>
+      <div className="export-options">
+        <button onClick={() => { exportAIResponse(message, 'txt'); onClose(); }}>
+          📄 Texto (.txt)
+        </button>
+        <button onClick={() => { exportAIResponse(message, 'md'); onClose(); }}>
+          📝 Markdown (.md)
+        </button>
+        <button onClick={() => { exportAIResponse(message, 'html'); onClose(); }}>
+          🌐 HTML (.html)
+        </button>
+        <button onClick={() => { exportAIResponse(message, 'json'); onClose(); }}>
+          📊 JSON (.json)
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="App">
       <header className="app-header">
@@ -387,6 +535,14 @@ function App() {
 
           <div className="upload-section">
             <h3>Subir Archivos</h3>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              onChange={handleFileSelect}
+              accept=".txt,.md,.json,.js,.py,.java,.cpp,.html,.css"
+              style={{ display: 'none' }}
+            />
             <div
               className={`upload-area ${isDragging ? 'dragging' : ''}`}
               onClick={() => fileInputRef.current?.click()}
@@ -397,13 +553,6 @@ function App() {
               <div className="upload-icon">📁</div>
               <p><strong>Arrastra archivos aquí</strong></p>
               <p>o haz clic para seleccionar</p>
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                onChange={handleFileSelect}
-                accept=".txt,.md,.json,.js,.py,.java,.cpp,.html,.css"
-              />
             </div>
 
             {uploadedFiles.length > 0 && (
@@ -468,6 +617,23 @@ function App() {
                       <div className="message-content">
                         {message.content}
                       </div>
+                      {message.role === 'assistant' && (
+                        <div className="message-actions">
+                          <button
+                            className="btn-export-response"
+                            onClick={() => setShowExportMenu(showExportMenu === message.timestamp ? null : message.timestamp)}
+                            title="Exportar respuesta"
+                          >
+                            💾 Exportar
+                          </button>
+                          {showExportMenu === message.timestamp && (
+                            <ExportMenu
+                              message={message}
+                              onClose={() => setShowExportMenu(null)}
+                            />
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
                   {isLoading && (
@@ -782,6 +948,12 @@ function App() {
             </div>
           </div>
         )}
+
+        {/* Modal de alerta de duplicados */}
+        <DuplicateAlertModal
+          alert={duplicateAlert}
+          onClose={() => setDuplicateAlert(null)}
+        />
       </div>
     </div>
   );

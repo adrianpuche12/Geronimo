@@ -1149,3 +1149,287 @@ code {
     font-size: 0.85rem;
   }
 }
+
+/* ============================================
+   EXPORT FUNCTIONALITY STYLES
+   ============================================ */
+
+/* Botones de exportación en mensajes */
+.message-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  position: relative;
+}
+
+.btn-export-response {
+  background: #2c3e50;
+  color: #e0e0e0;
+  border: 1px solid #4a9eff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85em;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.btn-export-response:hover {
+  background: #4a9eff;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(74, 158, 255, 0.3);
+}
+
+.btn-export-response:active {
+  transform: translateY(0);
+}
+
+/* Menú de exportación */
+.export-menu {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background: #2c3e50;
+  border: 1px solid #4a9eff;
+  border-radius: 8px;
+  padding: 15px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  min-width: 200px;
+}
+
+.export-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #444;
+  color: #e0e0e0;
+  font-size: 0.9em;
+  font-weight: 500;
+}
+
+.export-menu-header .close-btn {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 1.5em;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.export-menu-header .close-btn:hover {
+  background: #444;
+  color: #4a9eff;
+}
+
+.export-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.export-options button {
+  background: #34495e;
+  color: #e0e0e0;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.export-options button:hover {
+  background: #4a9eff;
+  color: white;
+  transform: translateX(4px);
+}
+
+.export-options button:active {
+  transform: translateX(2px);
+}
+
+/* Responsive adjustments for export menu */
+@media (max-width: 768px) {
+  .export-menu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 300px;
+  }
+}
+
+/* ============================================
+   DUPLICATE ALERT MODAL STYLES
+   ============================================ */
+
+/* Overlay con efecto blur */
+.duplicate-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Contenedor del modal con gradiente */
+.duplicate-modal-content {
+  background: linear-gradient(135deg, #2c3e50 0%, #1a2530 100%);
+  border: 2px solid #ff6b6b;
+  border-radius: 16px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(255, 107, 107, 0.4),
+              0 0 0 1px rgba(255, 107, 107, 0.2);
+  animation: slideDown 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Header del modal */
+.duplicate-modal-header {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-bottom: 3px solid #ff4757;
+}
+
+.duplicate-icon {
+  font-size: 2.5rem;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Body del modal */
+.duplicate-modal-body {
+  padding: 2rem;
+}
+
+.duplicate-main-message {
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+  text-align: center;
+  padding: 1rem;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 8px;
+  border-left: 4px solid #ff6b6b;
+}
+
+.duplicate-main-message strong {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+/* Footer del modal */
+.duplicate-modal-footer {
+  padding: 1.5rem 2rem;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid rgba(255, 107, 107, 0.2);
+}
+
+.btn-modal-close {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.btn-modal-close:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  background: linear-gradient(135deg, #ff5252 0%, #e04848 100%);
+}
+
+.btn-modal-close:active {
+  transform: translateY(0);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .duplicate-modal-content {
+    max-width: 95%;
+    margin: 1rem;
+  }
+
+  .duplicate-modal-header {
+    padding: 1rem;
+  }
+
+  .duplicate-icon {
+    font-size: 2rem;
+  }
+
+  .duplicate-modal-body {
+    padding: 1.5rem;
+  }
+
+  .duplicate-main-message {
+    font-size: 1rem;
+  }
+}
