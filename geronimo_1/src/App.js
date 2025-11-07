@@ -124,6 +124,7 @@ function App() {
     }
 
     setIsLoading(true);
+    let filesUploaded = 0;
 
     for (const file of files) {
       try {
@@ -146,6 +147,7 @@ function App() {
             uploadedAt: new Date().toISOString()
           }]);
           addSystemMessage(`✓ Archivo "${file.name}" subido correctamente.`);
+          filesUploaded++;
         }
       } catch (error) {
         console.error('Error uploading file:', error);
@@ -172,6 +174,11 @@ function App() {
     }
 
     setIsLoading(false);
+
+    // Recargar proyectos si se subió al menos un archivo exitosamente
+    if (filesUploaded > 0) {
+      await loadProjects();
+    }
   };
 
   const readFileContent = (file) => {

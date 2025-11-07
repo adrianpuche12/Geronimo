@@ -34,11 +34,14 @@ export const Sidebar = ({
           {projects.length === 0 ? (
             <option>No hay proyectos</option>
           ) : (
-            projects.map(project => (
-              <option key={project.id} value={project.id}>
-                {project.name}
-              </option>
-            ))
+            <>
+              <option value="all">🌐 Todos los proyectos</option>
+              {projects.map(project => (
+                <option key={project.id} value={project.id}>
+                  {project.name}
+                </option>
+              ))}
+            </>
           )}
         </select>
         <button
@@ -79,25 +82,35 @@ export const Sidebar = ({
 
       <div className="upload-section">
         <h3>Subir Archivos</h3>
-        <input
-          ref={fileInputRef}
-          type="file"
-          multiple
-          onChange={handleFileSelect}
-          accept=".txt,.md,.json,.js,.py,.java,.cpp,.html,.css"
-          style={{ display: 'none' }}
-        />
-        <div
-          className={`upload-area ${isDragging ? 'dragging' : ''}`}
-          onClick={() => fileInputRef.current?.click()}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <div className="upload-icon">📁</div>
-          <p><strong>Arrastra archivos aquí</strong></p>
-          <p>o haz clic para seleccionar</p>
-        </div>
+        {selectedProject === 'all' ? (
+          <div className="upload-area disabled">
+            <div className="upload-icon">⚠️</div>
+            <p><strong>Selecciona un proyecto específico</strong></p>
+            <p>para subir archivos</p>
+          </div>
+        ) : (
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              onChange={handleFileSelect}
+              accept=".txt,.md,.json,.js,.py,.java,.cpp,.html,.css"
+              style={{ display: 'none' }}
+            />
+            <div
+              className={`upload-area ${isDragging ? 'dragging' : ''}`}
+              onClick={() => fileInputRef.current?.click()}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <div className="upload-icon">📁</div>
+              <p><strong>Arrastra archivos aquí</strong></p>
+              <p>o haz clic para seleccionar</p>
+            </div>
+          </>
+        )}
 
         {uploadedFiles.length > 0 && (
           <div className="file-list">

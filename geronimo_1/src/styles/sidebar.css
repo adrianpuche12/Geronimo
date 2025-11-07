@@ -217,6 +217,18 @@
   box-shadow: var(--md-elevation-4);
 }
 
+.upload-area.disabled {
+  border-color: var(--md-text-disabled);
+  background-color: var(--md-surface-2dp);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.upload-area.disabled:hover {
+  background-color: var(--md-surface-2dp);
+  border-color: var(--md-text-disabled);
+}
+
 .upload-icon {
   font-size: 2.5rem;
   margin-bottom: var(--md-spacing-1);
